@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LottoLogic | Pattern Resonance Engine</title>
+    <style>
+        :root {
+            --bg-color: #0d1117;
+            --card-bg: #161b22;
+            --accent: #238636;
+            --accent-glow: #2ea043;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --border: #30363d;
+            --gradient-1: linear-gradient(135deg, #238636 0%, #1f6feb 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 20px;
+        }
+
+        header {
+            margin-bottom: 2rem;
+            text-align: center;
+            padding: 2rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        button.generate-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(35, 134, 54, 0.4);
+        }
+
+        button.generate-btn:hover {
+            background: var(--accent-glow);
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(35, 134, 54, 0.6);
+        }
+
+        button.generate-btn:disabled {
+            background: var(--border);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .results {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .result-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideIn 0.5s forwards;
+        }
+
+        @keyframes slideIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .numbers {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .ball {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Lotto Colors */
+        .color-1-10 { background: #fbc400; }
+        .color-11-20 { background: #69c8f2; }
+        .color-21-30 { background: #ff7272; }
+        .color-31-40 { background: #aaaaaa; }
+        .color-41-45 { background: #b0d840; }
+
+        .shadow {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.4), transparent 60%);
+        }
+
+        .meta {
+            text-align: right;
+        }
+
+        .resonance-score {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--accent-glow);
+        }
+
+        .resonance-label {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .details-list {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            flex-wrap: wrap;
+        }
+        
+        .tag {
+            background: #21262d;
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid #30363d;
+        }
+        
+        .tag.pass { border-color: #238636; color: #2ea043; }
+        .tag.fail { border-color: #da3633; color: #f85149; }
+
+        .loading {
+            text-align: center;
+            display: none;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>LottoLogic</h1>
+            <div class="subtitle">Algorithmic Resonance Engine v1.0</div>
+        </header>
+
+        <div class="controls">
+            <button class="generate-btn" id="genBtn" onclick="generateNumbers()">ANALYZE & GENERATE</button>
+        </div>
+
+        <div class="loading" id="loading">
+            Analyzing 200 historical rounds... Computing resonance...
+        </div>
+
+        <div class="results" id="output">
+            <!-- Results go here -->
+        </div>
+    </div>
+
+    <script>
+        function getBallColor(n) {
+            if (n <= 10) return 'color-1-10';
+            if (n <= 20) return 'color-11-20';
+            if (n <= 30) return 'color-21-30';
+            if (n <= 40) return 'color-31-40';
+            return 'color-41-45';
+        }
+
+        async function generateNumbers() {
+            const btn = document.getElementById('genBtn');
+            const output = document.getElementById('output');
+            const loader = document.getElementById('loading');
+            
+            btn.disabled = true;
+            loader.style.display = 'block';
+            output.innerHTML = ''; // Clear previous
+
+            try {
+                const response = await fetch('/api/generate');
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    // Artificial delay for "Computation Effect"
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                        btn.disabled = false;
+                        
+                        data.data.forEach((set, index) => {
+                            setTimeout(() => {
+                                renderCard(set, output);
+                            }, index * 200); // Staggered animation
+                        });
+                    }, 800);
+                } else {
+                    alert('Error: ' + data.message);
+                    btn.disabled = false;
+                }
+            } catch (e) {
+                console.error(e);
+                alert('Connection Failed');
+                btn.disabled = false;
+            }
+        }
+
+        function renderCard(set, container) {
+            const div = document.createElement('div');
+            div.className = 'result-card';
+            
+            // Balls HTML
+            let ballsHtml = '';
+            set.numbers.forEach(n => {
+                ballsHtml += `
+                    <div class="ball ${getBallColor(n)}">
+                        ${n}
+                        <div class="shadow"></div>
+                    </div>
+                `;
+            });
+            
+            // Details Tags
+            let detailsHtml = '';
+            // We want to show which rules passed/failed? Or just passed ones to look good?
+            // Let's show specific highlights
+            const highlights = [];
+            if(set.details['Sum Range']) highlights.push('Sum OK');
+            if(set.details['Odd/Even']) highlights.push('Odd/Even Balance');
+            if(set.details['Missing Zone']) highlights.push('Zero Zone');
+            
+            
+            let tags = highlights.map(h => `<span class="tag pass">${h}</span>`).join('');
+
+            div.innerHTML = `
+                <div style="flex:1">
+                    <div class="numbers">
+                        ${ballsHtml}
+                    </div>
+                    <div class="details-list">${tags}</div>
+                </div>
+                <div class="meta">
+                    <div class="resonance-score">${set.resonance_score}%</div>
+                    <div class="resonance-label">Resonance</div>
+                </div>
+            `;
+            container.appendChild(div);
+        }
+    </script>
+</body>
+</html>
