@@ -184,6 +184,94 @@
             margin-bottom: 2rem;
         }
 
+        .info-section {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .info-section h2 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .info-section p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-box h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            color: var(--text-primary);
+        }
+
+        .feature-box ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-box ul li {
+            color: var(--text-secondary);
+            padding: 0.3rem 0;
+        }
+
+        .feature-box ul li::before {
+            content: ">";
+            color: var(--accent);
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+        .coffee-box {
+            border-color: var(--accent);
+            border-style: dashed;
+        }
+
+        .coffee-box strong {
+            color: var(--accent-glow);
+        }
+
+        .coupang-banner {
+            display: flex;
+            justify-content: center;
+            margin: 1rem 0;
+        }
+
+        .small {
+            font-size: 0.85rem;
+        }
+
+        .disclaimer {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            opacity: 0.7;
+            text-align: center;
+        }
+
+        .warning {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: rgba(218, 54, 51, 0.1);
+            border: 1px solid rgba(218, 54, 51, 0.3);
+            border-radius: 8px;
+            color: #f85149;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
     </style>
 </head>
 <body>
@@ -205,6 +293,34 @@
         <div class="results" id="output">
             <!-- Results go here -->
         </div>
+
+        <section class="info-section">
+            <h2>200회차 로또 데이터 기반 알고리즘</h2>
+            <p>안녕하세요! 평소 데이터 분석과 알고리즘에 관심이 많은 대학생입니다.</p>
+            <p>"로또에도 규칙이 있지 않을까?"라는 발칙한(?) 상상에서 시작해, 최근 200회 분량의 데이터를 분석해서 저만의 번호 추출 알고리즘을 짜봤습니다.</p>
+
+            <div class="feature-box">
+                <h3>알고리즘 특징</h3>
+                <ul>
+                    <li>200회차 당첨 번호 패턴 분석 기반</li>
+                    <li>특정 규칙성 전제 하에 최적의 조합 산출</li>
+                    <li>유료 서비스가 아닌 순수하게 재미로 만든 프로젝트!</li>
+                </ul>
+            </div>
+
+            <div class="feature-box coffee-box">
+                <h3>커피 한 잔의 응원</h3>
+                <p>이 툴은 누구나 <strong>무료</strong>로 이용하실 수 있습니다!</p>
+                <p>다만, 밤새 코딩한 공대생에게 커피 한 잔 사주고 싶은 마음이 드신다면, 아래 링크를 통해 쿠팡 쇼핑을 즐겨주세요.</p>
+                <p class="small">여러분이 필요한 물건을 사시면 저에게 아주 작은 보탬이 됩니다. (여러분의 구매 가격은 똑같아요!)</p>
+                <div class="coupang-banner">
+                    <iframe src="https://coupa.ng/clBDzo" width="120" height="240" frameborder="0" scrolling="no" referrerpolicy="unsafe-url" browsingtopics></iframe>
+                </div>
+                <p class="disclaimer">쿠팡 파트너스 활동으로 커미션을 받을 수 있습니다.</p>
+            </div>
+
+            <p class="warning">* 본 알고리즘은 재미를 위한 분석 도구일 뿐, 당첨을 보장하지 않습니다. 과도한 몰입은 금물! 모두 행운을 빕니다!</p>
+        </section>
     </div>
 
     <script>
